@@ -9,7 +9,7 @@ def substract(n, base):
 	for a, b in zip(x, y):
 		b += debt
 		if a < b:
-			debpt = 1
+			debt = 1
 			a += base
 		else:
 			debt = 0

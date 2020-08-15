@@ -4,6 +4,8 @@
 def find(top_number, n):
 	if n >= top_number:
 		return -1
+	if n == top_number - 1:
+		return top_number
 	med = top_number // 2
 	if n < med:
 		return find(med, n)
@@ -15,9 +17,3 @@ def find(top_number, n):
 def solution(h, q):
 	top_number = 2 ** h - 1
 	return [find(top_number, n) for n in q]
-
-
-for k in range(1, 6):
-	print('======   ', k)
-	for i in range(1, 2 ** k):
-		print(i, find(2 ** k - 1, i))
