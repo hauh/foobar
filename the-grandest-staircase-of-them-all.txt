@@ -43,13 +43,27 @@ bricks. n will always be at least 3 (so you can have a staircase at all), but no
 
 Test cases
 ==========
+Your code should pass the following test cases.
+Note that it may also be run against hidden test cases not shown here.
 
-Inputs:
-    (int) n = 3
+-- Python cases --
+Input:
+solution.solution(3)
 Output:
-    (int) 1
+    1
 
-Inputs:
-    (int) n = 200
+Input:
+solution.solution(200)
 Output:
-    (int) 487067745
+    487067745
+
+-- Java cases --
+Input:
+Solution.solution(3)
+Output:
+    1
+
+Input:
+Solution.solution(200)
+Output:
+    487067745

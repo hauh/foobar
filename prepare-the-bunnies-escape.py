@@ -1,61 +1,54 @@
-m0 = [
-	[0, 1, 1, 0],
-	[0, 0, 0, 1],
-	[1, 1, 0, 0],
-	[1, 1, 1, 0],
-]
+"""Level 3.2"""
+
+from collections import deque
 
 
-m1 = [
-	[0, 0, 0, 0, 0, 0],
-	[1, 1, 1, 1, 1, 0],
-	[0, 0, 0, 0, 0, 0],
-	[0, 1, 1, 1, 1, 1],
-	[0, 1, 1, 1, 1, 1],
-	[0, 0, 0, 0, 0, 0]
-]
+def bfs(mp, height, width, best_lenght):
+	q = deque(((0, 0, 1),))
+	mp[0][0] = -1
+	try:
+		while q:
+			y, x, lenght = q.pop()
+			if lenght >= best_lenght:
+				return best_lenght
+			if y == height - 1 and x == width - 1:
+				return lenght
+			for a, b in ((1, 0), (0, 1), (-1, 0), (0, -1)):
+				if (height > y + a >= 0) and (width > x + b >= 0) and mp[y + a][x + b] == 0:
+					q.appendleft((y + a, x + b, lenght + 1))
+					mp[y + a][x + b] = -1
+		return best_lenght
+	finally:
+		for y in range(height):
+			for x in range(width):
+				if mp[y][x] == -1:
+					mp[y][x] = 0
 
 
-def find_path(mp, width, height):
-	best_lenght = width * height
-	path = [(0, 0, 1)]
-	while path:
-		y, x, lenght = path.pop()
-		if y == height - 1 and x == width - 1:
-			if lenght < best_lenght:
-				lenght = best_lenght
-			continue
-		mp[y][x] = -1
-		if x > 0 and mp[y][x - 1] == 0:
-			path.append((y, x - 1, lenght + 1))
-		if y > 0 and mp[y - 1][x] == 0:
-			path.append((y - 1, x, lenght + 1))
-		if x < width - 1 and mp[y][x + 1] == 0:
-			path.append((y, x + 1, lenght + 1))
-		if y < height - 1 and mp[y + 1][x] == 0:
-			path.append((y + 1, x, lenght + 1))
-	for y in range(height):
-		for x in range(width):
-			if mp[y][x] == -1:
-				mp[y][x] = 0
-	return best_lenght
+def is_blocked(mp, y, x, height, width):
+	passages = 0
+	for a, b in ((1, 0), (0, 1), (-1, 0), (0, -1)):
+		if (height > y + a >= 0) and (width > x + b >= 0) and mp[y + a][x + b] == 0:
+			passages += 1
+			if passages == 2:
+				return False
+	return True
 
 
 def solution(mp):
 	height = len(mp)
 	width = len(mp[0])
-	best_path = find_path(mp, width, height)
-	for x in range(width):
-		for y in range(height):
-			if mp[y][x] == 0:
+	best_lenght = bfs(mp, height, width, width * height)
+	best_possible = width + height - 1
+	if best_lenght == best_possible:
+		return best_possible
+	for y in range(height):
+		for x in range(width):
+			if mp[y][x] == 0 or is_blocked(mp, y, x, height, width):
 				continue
 			mp[y][x] = 0
-			path = find_path(mp, width, height)
-			if path < best_path:
-				best_path = path
+			path = bfs(mp, height, width, best_lenght)
+			if path < best_lenght:
+				best_lenght = path
 			mp[y][x] = 1
-	return best_path
-
-
-print(solution(m0))
-print(solution(m1))
+	return best_lenght
